@@ -24,27 +24,29 @@
 from osv import fields, osv
 from datetime import datetime, timedelta  
 
-import pdb
-
 class account_invoice(osv.osv):
 
     _name = "account.invoice"
     _inherit = "account.invoice"
-
+    
     def _get_next_date_due(self, cr, uid, ids, field_names, arg, context=None):
 
         vals={}
-        pdb.set_trace()
-        for invoice in self.browse(cr, uid, ids)
-            vals[invoice.id] = {}
-            vals[invoice.id]['next_date_due'] = invoice.date_due
-            for line in invoice.move_lines
-                if line.date_maturity and not line.reconcile
-                    if vals[invoice.id]['next_date_due'] < line.date_maturity
-                        vals[invoice.id]['next_date_due'] = line.date_maturity
-
+        for invoice in self.browse(cr, uid, ids):            
+            vals[invoice.id] = invoice.date_due
+            if invoice.move_id:
+                for line in invoice.move_id.line_id:
+                    if line.date_maturity and not line.reconcile:
+                        if vals[invoice.id] > line.date_maturity:
+                            vals[invoice.id] = line.date_maturity
+            value = {'s_next_date_due': vals[invoice.id]}
+            self.write(cr, uid, [invoice.id], value, context=context)
         return  vals
 
     _columns = {        
         'next_date_due' : fields.function(_get_next_date_due, string='Next Due Date', type='date'),
+        's_next_date_due': fields.date(string='Next Due Date', readonly=True), # Necesaria para poder agrupar en el buscador (en campos function no se puede)
     }  
+
+    
+    

@@ -8,7 +8,8 @@
             <field name="arch" type="xml">
                 <data>
                     <field name="date_due" position="before">
-                        <field name="next_date_due"/>
+                        <field name="next_date_due"/>      
+                        <field name="s_next_date_due" invisible="True"/>                  
                     </field>
                 </data>                
             </field>
@@ -21,11 +22,12 @@
                 <data>
                     <field name="date_due" position="before">
                         <field name="next_date_due"/>
+                        <field name="s_next_date_due" invisible="True"/>
                     </field>
                 </data>                
             </field>
         </record>  
-        <record id="cbk_payment_term_invoice_tree" model="ir.ui.view">
+        <record id="cbk_payment_term_invoice_form" model="ir.ui.view">
             <field name="name">account.invoice.form</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_form"/>
@@ -33,6 +35,7 @@
                 <data>
                     <field name="date_due" position="before">
                         <field name="next_date_due"/>
+                        <field name="s_next_date_due" invisible="True"/>
                     </field>
                 </data>                
             </field>
@@ -42,10 +45,10 @@
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">                
-                <group  expand='0' string='Group by...'>                    
-                    <filter string="Next Due Date" icon="terp-go-month" domain="[]"  context="{'group_by':'next_date_due'}"/>
+                <group expand="0" string="Group By...">                    
+                    <filter string="Next Due Date" icon="terp-go-month" domain="[]"  context="{'group_by':'s_next_date_due'}"/>
                 </group>
             </field>
         </record>
-    <data> 
-<openerp>
+    </data> 
+</openerp>
