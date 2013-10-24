@@ -1,0 +1,34 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* cbk_payment_term
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0-20130618-231044\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-10-24 14:08+0000\n"
+"PO-Revision-Date: 2013-10-24 14:08+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: cbk_payment_term
+#: view:account.invoice:0
+msgid "Group By..."
+msgstr "Agrupar por..."
+
+#. module: cbk_payment_term
+#: view:account.invoice:0
+#: field:account.invoice,next_date_due:0
+#: field:account.invoice,s_next_date_due:0
+msgid "Next Due Date"
+msgstr "Próx. vencimiento"
+
+#. module: cbk_payment_term
+#: model:ir.model,name:cbk_payment_term.model_account_invoice
+msgid "Invoice"
+msgstr "Factura"
+
