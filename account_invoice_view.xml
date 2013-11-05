@@ -11,6 +11,9 @@
                         <field name="next_date_due"/>      
                         <field name="s_next_date_due" invisible="True"/>                  
                     </field>
+                    <field name="residual" position="before">
+                        <field name="next_payment" sum="Next Residual Amount"/>      
+                    </field>
                 </data>                
             </field>
         </record>  
@@ -21,8 +24,9 @@
             <field name="arch" type="xml">
                 <data>
                     <field name="date_due" position="before">
+                        <field name="next_payment"/>
                         <field name="next_date_due"/>
-                        <field name="s_next_date_due" invisible="True"/>
+                        <field name="s_next_date_due" invisible="True"/>                        
                     </field>
                 </data>                
             </field>
@@ -34,6 +38,7 @@
             <field name="arch" type="xml">
                 <data>
                     <field name="date_due" position="before">
+                        <field name="next_payment"/>
                         <field name="next_date_due"/>
                         <field name="s_next_date_due" invisible="True"/>
                     </field>
