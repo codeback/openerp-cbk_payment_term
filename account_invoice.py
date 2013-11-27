@@ -23,6 +23,7 @@
 
 from osv import fields, osv
 from datetime import datetime, timedelta  
+from operator import itemgetter
 
 class account_invoice(osv.osv):
 
@@ -33,12 +34,24 @@ class account_invoice(osv.osv):
 
         vals={}
         for invoice in self.browse(cr, uid, ids):            
-            vals[invoice.id] = invoice.date_due
+            
+            date_due = invoice.date_due
+            vals[invoice.id] = date_due
             next_payment = invoice.residual
-            if invoice.move_id:
-                for line in invoice.move_id.line_id:
+
+            if invoice.move_id:                
+
+                lines = sorted(invoice.move_id.line_id, key=itemgetter('date_maturity'), reverse=True)
+
+                numLines = 0
+                for line in lines:                    
                     if line.date_maturity and not line.reconcile:
-                        if vals[invoice.id] > line.date_maturity:
+                        numLines += 1
+                        if numLines == 1 and date_due != line.date_maturity:
+                            date_due = line.date_maturity
+                            vals[invoice.id] = date_due
+
+                        if vals[invoice.id] >= line.date_maturity:
                             vals[invoice.id] = line.date_maturity
                             
                             if invoice.type == "out_invoice" or invoice.type == "in_refund":
@@ -49,6 +62,7 @@ class account_invoice(osv.osv):
             value = {
                 's_next_date_due': vals[invoice.id], 
                 'next_payment': next_payment,
+                'date_due': date_due
             }
             self.write(cr, uid, [invoice.id], value, context=context)
         return  vals
@@ -57,7 +71,16 @@ class account_invoice(osv.osv):
         'next_date_due' : fields.function(_get_next_payment, string='Next Due Date', type='date'),
         's_next_date_due': fields.date(string='Next Due Date', readonly=True), # Necesaria para poder agrupar en el buscador (en campos function no se puede)
         'next_payment' : fields.float(string='Next Payment', readonly=True),
+        'move_unrec_line_ids': fields.related('move_id', 'line_id', type="one2many", relation="account.move.line", string="Lines", store=False, readonly=True)
     }  
+
+    def on_create_write(self, cr, uid, id, context=None):
+        if not id:
+            return []
+
+        pool = self.pool.get('account.move.line')
+        ml = pool.browse(cr, uid, id, context=context)
+        return map(lambda x: x.id, ml.move_id.line_id)
 
     
     
